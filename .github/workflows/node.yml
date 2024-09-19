@@ -1,18 +1,20 @@
-name: NASA Project Cl
+name: NASA Project CI
 on:
-  push: 
-    branches: [main]
+  push:
+    branches: [ main ]
   pull_request:
-    branches: [main]
-jobs: 
+    branches: [ main ]
+jobs:
   build:
-    needs: 
-      runs-on: ubuntu-latest
-      steps:
-        -uses: actions/checkout@v2
-        -name: use Nodejs version 16
-        -uses: actions/setup-node@v2
+    strategy:
+      matrix:
+        node-version: [16.x]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
         with:
-          nodeversion: '16'
-        -run: npm install
-        -run: npm run build ---prefix client
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: cd client && npm run build
